@@ -8,12 +8,28 @@ const aiRoutes = require("./routes/aiRoutes");
 const app = express();
 
 //middleware
+// app.use(
+//   cors({
+//     origin: [
+//       "http://localhost:4200",
+//       "https://ai-daily-planner-frontend-dhmb93rwg-solo-explorer.vercel.app",
+//     ],
+//   }),
+// );
 app.use(
   cors({
-    origin: [
-      "http://localhost:4200",
-      "https://ai-daily-planner-frontend-dhmb93rwg-solo-explorer.vercel.app",
-    ],
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (
+        origin === "http://localhost:4200" ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
   }),
 );
 app.use(express.json());
