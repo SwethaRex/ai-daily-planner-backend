@@ -1,0 +1,147 @@
+## AI daily planner
+
+### Architecture
+
+Frontend -> Angular (vercel)
+Backend-> Node/NestJS (Render)
+Database -> Supabase (Postgres + Auth)
+AI -> OpenAI API
+Memory -> DB (phase 1), vector (phase 2)
+
+### Feature Design
+
+1. Task Management
+   Title, description, deadline, priority(Low/medium/high), estimated time(optional), status(pending/done)
+2. AI "plan my day" feature
+   input: today's task and user working hours
+   output: sort by urgenry, allocate time slot, avoid overlaps, consider deadlines
+3. Simple AI chat
+   Input: can i finish everything today?
+   Output: smart reasoning
+4. Daily Schedule View
+   Calender style, shows time slot and task
+5. Authentication
+   login/signup, user specific task
+
+### AI flow
+
+when user clicks "Plan my day"
+Backend logic:
+
+1. fetch user task
+2. Filter for today
+3. Structure Data
+4. Send prompt to OpenAI
+5. Parse AI Output
+6. Store generate Schedule
+7. Return to UI
+
+### Prompt design
+
+"""
+You are an intelligent daily planning assistant.
+
+Given a list of tasks, each with priority, deadline and estimated duration, create a realistic schdule for today.
+
+Constraints:
+-Work between 9:00 and 18:00
+-Add short breaks if schedule is heavy
+-Prioritize urgent and high-priority tasks
+-avoid overlapping tasks
+
+Return output in JSON format:
+[
+{ "task": "....", "start":"HH:MM", "end":"HH:MM" }
+]
+
+Tasks: {{tasks}} """
+
+### Database Schema
+
+Users handled by supabase Auth
+
+Tasks table:
+
+1. tasks
+2. id
+3. user-id
+4. Title
+5. description
+6. priority
+7. deadline
+8. estimated time
+9. status
+   10 created_at
+
+Schedule table:
+
+1. schdule
+2. id
+3. user_id
+4. Date
+5. schdule_json
+6. created_at
+
+### Front end design
+
+Pages:
+
+1. dashboard -> task list, plan my day button
+2. Schedule View -> timeline/cards View
+3. AI chat panel -> simple input box, response area
+
+Components:
+TaskFrom
+TaskList
+Schedule
+Chat
+
+### Backend API design
+
+Task APIs
+
+1. get /task
+2. post /tasks
+3. put /tasks:id
+4. delete /tasks/:id
+
+AI planner API
+Post ai/plan
+
+Chat API
+post ai/chat
+
+---
+
+Lets get into work
+Initial setup:
+
+1. create AI daily planner backend folder
+2. generate json file: npm init -y
+3. install express, cors, dotend, axios: npm i express cors dotenv axios
+4. install nodemon: npm i --save-dev nodemon
+5. Create folder Structure
+
+---
+
+1. configure env file
+2. configure supabase DB
+   npm install @supabase/supabase-js
+3. configure taskController, taskRoutes and aiController, aiRoutes. Define index.js -- these files contain api methods, path and controls
+4. configure openaiService -- this file contains the openRouter llm calls
+5. Create middleware to set up authentication
+6. To get the token, create a test user in supabase db
+   username: test@gmail.com
+   password: test123
+
+- Go to postman, in send a POST method with the below details
+  url: https://pcshyzlkjmvournzhegx.supabase.co/auth/v1/token?grant_type=password
+  headers:
+  apikey: eyJhbGciOiJI...
+  Content-Type: application/json
+  body:
+  {
+  "email": "test@gmail.com",
+  "password": "test123"
+  }
+- in response, we get the access token, this is the JWT middleware token
