@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:4200",
-      "https://ai-daily-planner-frontend-dhmb93rwg-solo-explorer.vercel.app/",
+      "https://ai-daily-planner-frontend-dhmb93rwg-solo-explorer.vercel.app",
     ],
   }),
 );
