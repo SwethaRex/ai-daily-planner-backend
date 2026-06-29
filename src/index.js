@@ -8,7 +8,11 @@ const aiRoutes = require("./routes/aiRoutes");
 const app = express();
 
 //middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:4200", "https://your-angular-app.vercel.app"],
+  }),
+);
 app.use(express.json());
 
 //routes
