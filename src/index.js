@@ -10,7 +10,10 @@ const app = express();
 //middleware
 app.use(
   cors({
-    origin: ["http://localhost:4200", "https://your-angular-app.vercel.app"],
+    origin: [
+      "http://localhost:4200",
+      "https://ai-daily-planner-frontend-dhmb93rwg-solo-explorer.vercel.app/",
+    ],
   }),
 );
 app.use(express.json());
